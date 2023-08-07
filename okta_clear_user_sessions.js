@@ -1,6 +1,6 @@
 const axios = require('axios');
 module.exports = function(RED) {
-    function okta_remove_user_from_group(config) {
+    function okta_clear_user_sessions(config) {
         RED.nodes.createNode(this, config);
         var node = this;
         node.on('input', function(msg) {
@@ -8,10 +8,8 @@ module.exports = function(RED) {
 		try{
             const apiKey = msg.config.OktaKEY;
             const oktaDomain = msg.config.Domain;
-            const groupID = msg.groupID;
-            const userID = msg.usersId[0];
-			const user_name = msg.emails[0];
-			const groupName = msg.group_name;
+            const userID = msg.payload.data.entities[0].originId;
+			const user_name = msg.payload.data.entities[0].email;
 
 			headers = {
                     'Accept': 'application/json',
@@ -19,14 +17,14 @@ module.exports = function(RED) {
                     'Authorization': 'SSWS ' + apiKey
             };
 
-            const url = 'https://' + oktaDomain + '.okta.com/api/v1/groups/' + groupID + '/users/' + userID;
+            const url = 'https://' + oktaDomain + '.okta.com/api/v1/users/' + userID + '/sessions';
             const res = axios.delete(url, { headers });
-			node.warn(user_name + ' (id: ' + userID + ') was removed from ' + groupName + ' (id: ' + groupID + ')');
+			node.warn(user_name + ' (id: ' + userID + ') sessions was deleted');
 			node.send(msg);
 		}catch(error) {
 			node.warn(error);
 		}			
         });
     }
-    RED.nodes.registerType("okta_remove_user_from_group", okta_remove_user_from_group);
+    RED.nodes.registerType("okta_clear_user_sessions", okta_clear_user_sessions);
 };
