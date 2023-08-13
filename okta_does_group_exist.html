@@ -12,6 +12,13 @@
         outputs: 2,
         label: function() {
             return this.name || "okta - Does group_exist";
+        },
+		oneditprepare: function () {
+            $("#node-input-groupName").typedInput({
+                type: "msg",
+                types: ["msg", "flow", "global", "str"],
+                typeField: "#node-input-groupNameType"
+            });
         }
     });
 </script>

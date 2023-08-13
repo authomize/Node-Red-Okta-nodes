@@ -5,13 +5,26 @@
         defaults: {
             name: {value: "Okta - Suspend user"},
             auth: { type: 'azure_config', required: true },
-            userId: { value: '', required: true },
-            userIdType: {value: ''},
+            userID: { value: '', required: true },
+            userIDType: {value: ''},
 			userName: { value: '', required: true },
             userNameType: {value: ''},
         },
         inputs:1,
-        outputs:1
+        outputs:1,
+		oneditprepare: function () {
+            $("#node-input-userID").typedInput({
+                type: "msg",
+                types: ["msg", "flow", "global", "str"],
+                typeField: "#node-input-userIDType"
+            });
+
+            $("#node-input-userName").typedInput({
+                type: "msg",
+                types: ["msg", "flow", "global", "str"],
+                typeField: "#node-input-userNameType"
+            });
+        }
     });
 </script>
 

@@ -11,7 +11,20 @@
             groupDescType: {value: ''},
         },
         inputs:1,
-        outputs:1
+        outputs:1,
+		oneditprepare: function () {
+            $("#node-input-groupName").typedInput({
+                type: "msg",
+                types: ["msg", "flow", "global", "str"],
+                typeField: "#node-input-groupNameType"
+            });
+
+            $("#node-input-groupDesc").typedInput({
+                type: "msg",
+                types: ["msg", "flow", "global", "str"],
+                typeField: "#node-input-groupDescType"
+            });
+        }
     });
 </script>
 

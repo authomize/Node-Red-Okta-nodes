@@ -5,10 +5,10 @@
         defaults: {
             name: {value: "Okta - Add user to group"},
             auth: { type: 'azure_config', required: true },
-            userId: { value: '', required: true },
-            userIdType: {value: ''},
-            groupId: { value: '', required: true },
-            groupIdType: {value: ''},
+            userID: { value: '', required: true },
+            userIDType: {value: ''},
+            groupID: { value: '', required: true },
+            groupIDType: {value: ''},
 			userName: { value: '', required: true },
             userNameType: {value: ''},
 			groupName: { value: '', required: true },
@@ -16,7 +16,32 @@
 
         },
         inputs:1,
-        outputs:1
+        outputs:1,
+		oneditprepare: function () {
+            $("#node-input-userID").typedInput({
+                type: "msg",
+                types: ["msg", "flow", "global", "str"],
+                typeField: "#node-input-userIDType"
+            });
+
+            $("#node-input-userName").typedInput({
+                type: "msg",
+                types: ["msg", "flow", "global", "str"],
+                typeField: "#node-input-userNameType"
+            });
+			
+			$("#node-input-groupID").typedInput({
+                type: "msg",
+                types: ["msg", "flow", "global", "str"],
+                typeField: "#node-input-groupIDType"
+            });
+			
+			$("#node-input-groupName").typedInput({
+                type: "msg",
+                types: ["msg", "flow", "global", "str"],
+                typeField: "#node-input-groupNameType"
+            });
+        }
     });
 </script>
 
@@ -49,7 +74,7 @@
         <label for="node-input-groupID">
           <i class="fa fa-group"></i> group ID
         </label>
-        <input type="text" id="node-input-userName" placeholder="Enter group ID">
+        <input type="text" id="node-input-groupID" placeholder="Enter group ID">
         <input type="hidden" id="node-input-groupIDType" />
 	</div>
 	<div class="form-row">

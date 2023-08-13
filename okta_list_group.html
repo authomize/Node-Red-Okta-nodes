@@ -5,14 +5,21 @@
         defaults: {
             name: {value:"Okta - List group"},
             auth: { type: 'azure_config', required: true },
-            groupId: { value: '', required: true },
-            groupIdType: {value: ''},
+            groupID: { value: '', required: true },
+            groupIDType: {value: ''},
         },
         inputs:3,
         outputs:1,
         icon: "file.png",
         label: function() {
             return this.name||"Okta - List group";
+        },
+		oneditprepare: function () {
+            $("#node-input-groupID").typedInput({
+                type: "msg",
+                types: ["msg", "flow", "global", "str"],
+                typeField: "#node-input-groupIDType"
+            });
         }
     });
 </script>
