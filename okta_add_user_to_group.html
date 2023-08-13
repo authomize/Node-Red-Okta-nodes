@@ -3,7 +3,16 @@
         category: 'authomize_okta',
         color: '#a6bbcf',
         defaults: {
-            name: {value: "Okta - Add user to group"}
+            name: {value: "Okta - Add user to group"},
+            auth: { type: 'azure_config', required: true },
+            userId: { value: '', required: true },
+            userIdType: {value: ''},
+            groupId: { value: '', required: true },
+            groupIdType: {value: ''},
+			userName: { value: '', required: true },
+            userNameType: {value: ''},
+			groupName: { value: '', required: true },
+            groupNameType: {value: ''},
 
         },
         inputs:1,
@@ -13,9 +22,43 @@
 
 <script type="text/html" data-template-name="okta_add_user_to_group">
     <div class="form-row">
-                <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-                <input type="text" id="node-input-name" placeholder="Name">
-        </div>
+		<label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+		<input type="text" id="node-input-name" placeholder="Name">
+	</div>
+	</div>
+		<div class="form-row">
+        <label for="node-input-auth"><i class="fa fa-cogs"></i> Okta Credentials</label>
+        <input type="text" id="node-input-auth" placeholder="auth">
+    </div>
+    <div class="form-row">
+        <label for="node-input-userName">
+          <i class="fa fa-group"></i> Username
+        </label>
+        <input type="text" id="node-input-userName" placeholder="Enter username">
+        <input type="hidden" id="node-input-userNameType" />
+	</div>
+	<div class="form-row">
+        <label for="node-input-userID">
+          <i class="fa fa-group"></i> User ID
+        </label>
+        <input type="text" id="node-input-userID" placeholder="Enter User ID">
+        <input type="hidden" id="node-input-userIDType" />
+	</div>
+	
+    <div class="form-row">
+        <label for="node-input-groupID">
+          <i class="fa fa-group"></i> group ID
+        </label>
+        <input type="text" id="node-input-userName" placeholder="Enter group ID">
+        <input type="hidden" id="node-input-groupIDType" />
+	</div>
+	<div class="form-row">
+        <label for="node-input-groupName">
+          <i class="fa fa-group"></i> Group name
+        </label>
+        <input type="text" id="node-input-groupName" placeholder="Enter Group name">
+        <input type="hidden" id="node-input-groupNameType" />
+	</div>
 </script>
 
 <script type="text/html" data-help-name="okta_add_user_to_group">

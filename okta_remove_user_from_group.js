@@ -6,12 +6,29 @@ module.exports = function(RED) {
         node.on('input', function(msg) {
 
 		try{
-            const apiKey = msg.config.OktaKEY;
-            const oktaDomain = msg.config.Domain;
-            const groupID = msg.groupID;
-            const userID = msg.usersId[0];
-			const user_name = msg.emails[0];
-			const groupName = msg.group_name;
+            node.auth = RED.nodes.getNode(config.auth);
+            
+			if (!node.auth || !node.auth.has_credentials) {
+				node.error("auth configuration is missing");
+				return
+			}
+			const {apiKey, oktaDomain} = config.auth;
+
+			const userID = RED.util.evaluateNodeProperty(
+				config.userID, config.userIDType, node, msg
+			)
+
+			const userName = RED.util.evaluateNodeProperty(
+				config.userName, config.userNameType, node, msg
+			)
+			
+			const groupID = RED.util.evaluateNodeProperty(
+				config.groupID, config.userIDType, node, msg
+			)
+
+			const groupName = RED.util.evaluateNodeProperty(
+				config.groupName, config.userNameType, node, msg
+			)
 
 			headers = {
                     'Accept': 'application/json',
@@ -21,7 +38,7 @@ module.exports = function(RED) {
 
             const url = 'https://' + oktaDomain + '.okta.com/api/v1/groups/' + groupID + '/users/' + userID;
             const res = axios.delete(url, { headers });
-			node.warn(user_name + ' (id: ' + userID + ') was removed from ' + groupName + ' (id: ' + groupID + ')');
+			node.warn(userName + ' (id: ' + userID + ') was removed from ' + groupName + ' (id: ' + groupID + ')');
 			node.send(msg);
 		}catch(error) {
 			node.warn(error);

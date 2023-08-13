@@ -6,10 +6,21 @@ module.exports = function(RED) {
         node.on('input', function(msg) {
 
 		try{
-            const apiKey = msg.config.OktaKEY;
-            const oktaDomain = msg.config.Domain;
-            const userID = msg.payload.data.entities[0].originId;
-			const user_name = msg.payload.data.entities[0].email;
+			node.auth = RED.nodes.getNode(config.auth);
+            
+			if (!node.auth || !node.auth.has_credentials) {
+				node.error("auth configuration is missing");
+				return
+			}
+			const {apiKey, oktaDomain} = config.auth;
+
+			const userID = RED.util.evaluateNodeProperty(
+				config.userID, config.userIDType, node, msg
+			)
+
+			const userName = RED.util.evaluateNodeProperty(
+				config.userName, config.userNameType, node, msg
+			)
 
 			headers = {
                     'Accept': 'application/json',
@@ -19,7 +30,7 @@ module.exports = function(RED) {
 
             const url = 'https://' + oktaDomain + '.okta.com/api/v1/users/' + userID + '/sessions';
             const res = axios.delete(url, { headers });
-			node.warn(user_name + ' (id: ' + userID + ') sessions was deleted');
+			node.warn(userName + ' (id: ' + userID + ') sessions was deleted');
 			node.send(msg);
 		}catch(error) {
 			node.warn(error);

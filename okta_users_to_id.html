@@ -3,7 +3,10 @@
         category: 'authomize_okta',
         color: '#a6bbcf',
         defaults: {
-            name: {value:"Okta - users to id"}
+            name: {value:"Okta - users to id"},
+            auth: { type: 'azure_config', required: true },
+            emails: { value: '', required: true },
+            emailsType: {value: ''}
         },
         inputs:1,
         outputs:1
@@ -15,6 +18,17 @@
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
+	<div class="form-row">
+        <label for="node-input-auth"><i class="fa fa-cogs"></i> Okta Credentials</label>
+        <input type="text" id="node-input-auth" placeholder="auth">
+    </div>
+    <div class="form-row">
+        <label for="node-input-emails">
+          <i class="fa fa-group"></i> Emails
+        </label>
+        <input type="text" id="node-input-emails" placeholder="Enter emails">
+        <input type="hidden" id="node-input-emailsType" />
+      </div>
 </script>
 
 <script type="text/html" data-help-name="okta_users_to_id">

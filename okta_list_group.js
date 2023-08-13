@@ -5,9 +5,17 @@ module.exports = function(RED) {
         node.on('input', function(msg) {
             const https = require('https');
 
-            const apiKey = msg.config.OktaKEY;
-            const oktaDomain = msg.config.Domain;
-			const groupID = msg.groupID;
+			node.auth = RED.nodes.getNode(config.auth);
+            
+			if (!node.auth || !node.auth.has_credentials) {
+				node.error("auth configuration is missing");
+				return
+			}
+			const {apiKey, oktaDomain} = config.auth;
+
+			const groupID = RED.util.evaluateNodeProperty(
+				config.groupID, config.userIDType, node, msg
+			)
 
             const options = {
                 headers: {

@@ -5,11 +5,26 @@ module.exports = function(RED) {
         var node = this;
         node.on('input', function(msg) {
 
+		node.auth = RED.nodes.getNode(config.auth);
+            
+		if (!node.auth || !node.auth.has_credentials) {
+			node.error("auth configuration is missing");
+			return
+		}
+
+		const userID = RED.util.evaluateNodeProperty(
+			config.userID, config.userIDType, node, msg
+		)
+
+		const userName = RED.util.evaluateNodeProperty(
+			config.userName, config.userNameType, node, msg
+		)
+		
+		const {apiKey, oktaDomain} = config.auth;
+		
         try{
-            const apiKey = msg.config.OktaKEY;
-            const oktaDomain = msg.config.Domain;
 			const userID = msg.payload.data.entities[0].originId;
-			const user_name = msg.payload.data.entities[0].email;
+			const userName = msg.payload.data.entities[0].email;
 
             headers = {
                     'Accept': 'application/json',
@@ -18,7 +33,7 @@ module.exports = function(RED) {
             };
             const url = 'https://' + oktaDomain + '.okta.com/api/v1/users/' + userID + '/lifecycle/suspend';
 			axios.post(url, {}, { headers }).then(response => {
-            node.warn(user_name + ' (id: ' + userID + ') was suspended');
+            node.warn(userName + ' (id: ' + userID + ') was suspended');
             node.send(msg);
           })
           .catch(error => {

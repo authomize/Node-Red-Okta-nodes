@@ -5,9 +5,23 @@ module.exports = function(RED) {
         node.on('input', function(msg) {
             const axios = require('axios');
 
-            const apiKey = msg.config.OktaKEY;
-            const oktaDomain = msg.config.Domain;
-            const postData = JSON.stringify({"profile": {"name": msg.group_name,"description": msg.group_desc}});
+			node.auth = RED.nodes.getNode(config.auth);
+            
+			if (!node.auth || !node.auth.has_credentials) {
+				node.error("auth configuration is missing");
+				return
+			}
+			const {apiKey, oktaDomain} = config.auth;
+
+			const groupName = RED.util.evaluateNodeProperty(
+				config.groupName, config.userNameType, node, msg
+			)
+
+			const groupDesc = RED.util.evaluateNodeProperty(
+				config.groupDesc, config.groupDescType, node, msg
+			)
+			
+			const postData = JSON.stringify({"profile": {"name": groupName,"description": groupDesc}});
 
             headers = {
                     'Accept': 'application/json',

@@ -6,9 +6,18 @@ module.exports = function(RED) {
         var node = this;
 
         node.on('input', function(msg) {
-            const apiKey = msg.config.OktaKEY;
-            const oktaDomain = msg.config.Domain;
-            const groupName = msg.group_name;
+			
+			node.auth = RED.nodes.getNode(config.auth);
+            
+			if (!node.auth || !node.auth.has_credentials) {
+				node.error("auth configuration is missing");
+				return
+			}
+			const {apiKey, oktaDomain} = config.auth;
+            
+			const groupName = RED.util.evaluateNodeProperty(
+				config.groupName, config.userNameType, node, msg
+			)
 
             const url = 'https://' + oktaDomain + '.okta.com/api/v1/groups?search=profile.name+eq+%22' + groupName + '%22';
             const options = {

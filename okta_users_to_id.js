@@ -7,9 +7,19 @@ module.exports = function(RED) {
         node.on('input', async function(msg) {
             const https = require('https');
 
-            const apiKey = msg.config.OktaKEY;
-            const oktaDomain = msg.config.Domain;
-            const emails = msg.emails;
+			node.auth = RED.nodes.getNode(config.auth);
+            
+			if (!node.auth || !node.auth.has_credentials) {
+				node.error("auth configuration is missing");
+				return
+			}
+
+			const emails = RED.util.evaluateNodeProperty(
+				config.emails, config.emailsType, node, msg
+			  )
+			  
+			const {apiKey, oktaDomain} = config.auth;
+
             const options = {
                 headers: {
                     Accept: 'application/json',
